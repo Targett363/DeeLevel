@@ -144,6 +144,7 @@ void setup() {
   mxconfig.mx_height = PANEL_HEIGHT;      // we have 64 pix heigh panels
   mxconfig.chain_length = PANELS_NUMBER;  // we have 2 panels chained
   mxconfig.gpio.e = PIN_E;
+  mxconfig.double_buff = true;
   dma_display = new MatrixPanel_I2S_DMA(mxconfig);
   dma_display->begin(); // use default pins
   dma_display->setTextSize(1);     // size 1 == 8 pixels high
@@ -214,6 +215,7 @@ void displayData(){
   while(!dataUpdated){
     Serial.print("while loop:");
     Serial.println(relativePosition);
+    dma_display->flipDMABuffer();
     dma_display->fillScreen(dma_display->color444(0, 0, 0));
     drawWA(relativePosition,0,72,32, WABitmap, dma_display->color565(100,100,100));
     //dma_display->fillScreen(dma_display->color444(0, 0, 0)); //Clear the screen
@@ -269,6 +271,7 @@ void displayData(){
       dma_display->setTextColor(dma_display->color444(8,8,8));*/
     }
     drawWA(relativePosition+186,0,72,32, WABitmap, dma_display->color565(100,100,100));
+    dma_display->showDMABuffer();
     relativePosition--;
     if(relativePosition<=-253){
       break;
